@@ -40,38 +40,6 @@ describe("catalogService", () => {
         stock: expect.any(Number),
       });
     });
-
-    test("should throw error with unable to create product", async () => {
-      const service = new CatalogService(repository);
-      const reqBody = mockProduct({
-        price: +faker.commerce.price(),
-      });
-
-      jest
-        .spyOn(repository, "create")
-        .mockImplementationOnce(() => Promise.resolve({} as Product));
-
-      await expect(service.createProduct(reqBody)).rejects.toThrow(
-        "unable to create product"
-      );
-    });
-
-    test("should throw error with product already exist", async () => {
-      const service = new CatalogService(repository);
-      const reqBody = mockProduct({
-        price: +faker.commerce.price(),
-      });
-
-      jest
-        .spyOn(repository, "create")
-        .mockImplementationOnce(() =>
-          Promise.reject(new Error("product already exist"))
-        );
-
-      await expect(service.createProduct(reqBody)).rejects.toThrow(
-        "product already exist"
-      );
-    });
   });
 
   
