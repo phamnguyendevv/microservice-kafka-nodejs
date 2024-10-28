@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response, Router} from "express";
+import express, { NextFunction, Request, Response, Router } from "express";
 import { CatalogService } from "../services/catalog.service";
 import { CatalogRepository } from "../repository/catalog.repository";
 import { RequestValidator } from "../utils/requestValidator";
@@ -29,7 +29,5 @@ router.post(
     }
   }
 );
-
-
 
 export default router;
