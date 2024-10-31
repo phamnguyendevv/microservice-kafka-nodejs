@@ -2,8 +2,9 @@
   "name": "order_service",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc -p .",
     "test": "jest",
     "db:generate": "drizzle-kit generate:pg",
@@ -16,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "@sinclair/typebox": "^0.33.17",
-    "@types/node": "^22.7.8",
     "ajv": "^8.17.1",
     "axios": "^1.7.7",
     "class-validator": "^0.14.1",
@@ -27,14 +27,15 @@
     "pg": "^8.13.1",
     "pino": "^9.5.0",
     "pino-http": "^10.3.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/node": "^22.8.6",
     "@types/pg": "^8.11.10",
     "drizzle-kit": "^0.27.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
   },
   "description": ""
 }
