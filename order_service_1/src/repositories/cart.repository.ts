@@ -12,7 +12,7 @@ export class CartRepository implements ICartsRepository {
   }
 
   async create(data: Carts): Promise<Carts> {
-    return this._prisma.Carts.create({
+    return this._prisma.carts.create({
       data,
     });
   }
