@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { CartService } from "../services/cart.service"; // Giả sử bạn có CartService
-import { CartRepository} from "../repositories/cart.repository"
+import { CartRepository } from "../repositories/cart.repository";
 
 export const catalogService = new CartService(new CartRepository());
-
 
 export const createCart = async (
   req: Request,
@@ -12,7 +11,12 @@ export const createCart = async (
 ): Promise<void> => {
   try {
     // Giả sử req.body chứa thông tin cần thiết để tạo giỏ hàng
-    const cartData = req.body;
+    const cartData = {
+      ...req.body,
+      create_at: new Date(),
+      update_at: new Date(),
+    };
+
     const cart = await catalogService.createProduct(cartData);
 
     res.status(201).json({
