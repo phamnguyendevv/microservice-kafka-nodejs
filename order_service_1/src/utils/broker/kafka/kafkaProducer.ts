@@ -1,17 +1,17 @@
 // src/brokers/kafka/kafkaProducer.ts
 import { kafka } from "./kafkaClient";
 import { Partitioners, Producer } from "kafkajs";
-import { PublishType } from "../broker.type";
+import { ProducerType, PublishType } from "../broker.type";
 import { createTopic } from "./kafkaAdmin";
 
 let producer: Producer;
 
-export const connectProducer = async (): Promise<Producer> => {
+export const connectProducer = async <T>(): Promise<T> => {
   await createTopic(["OrderEvents"]);
 
   if (producer) {
     console.log("Producer already connected");
-    return producer;
+    return producer as unknown as T;
   }
 
   producer = kafka.producer({
@@ -19,7 +19,7 @@ export const connectProducer = async (): Promise<Producer> => {
   });
   await producer.connect();
   console.log("Producer connected");
-  return producer;
+  return producer as unknown as T;
 };
 
 export const disconnectProducer = async (): Promise<void> => {
@@ -29,7 +29,7 @@ export const disconnectProducer = async (): Promise<void> => {
 };
 
 export const publish = async (data: PublishType): Promise<boolean> => {
-  const producer = await connectProducer();
+  const producer = await connectProducer<Producer>();
   const result = await producer.send({
     topic: data.topic,
     messages: [
@@ -42,4 +42,10 @@ export const publish = async (data: PublishType): Promise<boolean> => {
   });
   console.log("Publishing result", result);
   return result.length > 0;
+};
+
+export const ProducerBroker: ProducerType = {
+  connectProducer,
+  disconnectProducer,
+  publish,
 };

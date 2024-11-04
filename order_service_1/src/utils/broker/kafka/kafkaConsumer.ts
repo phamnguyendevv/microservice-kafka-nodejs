@@ -1,44 +1,49 @@
 // src/brokers/kafka/kafkaConsumer.ts
 import { kafka } from "./kafkaClient";
 import { Consumer } from "kafkajs";
-import { MessageHandler } from "../broker.type";
-import { OrderEvent, TOPIC_TYPE } from "../../../types";
+import { ConsumerType, MessageHandler } from "../broker.type";
+import { MessageType, OrderEvent, TOPIC_TYPE } from "../../../types";
 
 let consumer: Consumer;
 
-export const connectConsumer = async (): Promise<Consumer> => {
+const connectConsumer = async <T>(): Promise<T> => {
   if (consumer) {
     console.log("Consumer already connected");
-    return consumer;
+    return consumer as unknown as T;
   }
 
   consumer = kafka.consumer({
     groupId: process.env.GROUP_ID || "order-service-group",
   });
   await consumer.connect();
-  return consumer;
+  return consumer as unknown as T;
 };
 
-export const disconnectConsumer = async (): Promise<void> => {
+
+const disconnectConsumer = async (): Promise<void> => {
   if (consumer) {
     await consumer.disconnect();
   }
 };
 
-export const subscribe = async (
+const subscribe = async (
   messageHandler: MessageHandler,
   topic: TOPIC_TYPE
 ): Promise<void> => {
-  const consumer = await connectConsumer();
-  await consumer.subscribe({ topic, fromBeginning: true });
+   const consumer = await connectConsumer<Consumer>();
+  await consumer.subscribe({ topic: topic, fromBeginning: true });
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
+      if (topic !== "OrderEvents") {
+        return;
+      }
+
       if (message.key && message.value) {
-        const inputMessage = {
+        const inputMessage: MessageType = {
           headers: message.headers,
           event: message.key.toString() as OrderEvent,
-          data: JSON.parse(message.value.toString()),
+          data: message.value ? JSON.parse(message.value.toString()) : null,
         };
         await messageHandler(inputMessage);
         await consumer.commitOffsets([
@@ -47,4 +52,10 @@ export const subscribe = async (
       }
     },
   });
+};
+
+export const ConsumerBroker : ConsumerType = {
+  connectConsumer,
+  disconnectConsumer,
+  subscribe,
 };

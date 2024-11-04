@@ -9,13 +9,14 @@ export interface PublishType {
 
 export type MessageHandler = (input: MessageType) => void;
 
-export type MessageBrokerType = {
+export type ProducerType = {
   // producer
   connectProducer: <T>() => Promise<T>;
   disconnectProducer: () => Promise<void>;
   publish: (data: PublishType) => Promise<boolean>;
+};
 
-  // consumer
+export type ConsumerType = {
   connectConsumer: <T>() => Promise<T>;
   disconnectConsumer: () => Promise<void>;
   subscribe: (
