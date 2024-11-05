@@ -1,16 +1,16 @@
-import { ICartsRepository } from "../interface/cartRepository.interface";
+import { ICartLineItemsRepository } from "../interface/cartRepository.interface";
 
-export class CartService {
-  private _repository: ICartsRepository;
+export class CartLineItemsService {
+  private _repository: ICartLineItemsRepository;
 
-  constructor(repository: ICartsRepository) {
+  constructor(repository: ICartLineItemsRepository) {
     this._repository = repository;
   }
 
-  async createCart(input: any) {
+  async addItemToCart(input: any) {
     const data = await this._repository.create(input);
     if (!data.id) {
-      throw new Error("unable to create cart");
+      throw new Error("unable add item to cart");
     }
     return data;
   }
@@ -21,5 +21,4 @@ export class CartService {
     }
     return data;
   }
-
 }
