@@ -11,7 +11,7 @@ export const createOrder = async (
     // 3rd step: publish the message
     await ProducerBroker.publish({
       topic: "OrderEvents",
-      headers: { token: req.headers.authorization },
+      headers: { token: "tolen" },
       event: OrderEvent.CREATE_ORDER,
       message: {
         orderId: 1,
