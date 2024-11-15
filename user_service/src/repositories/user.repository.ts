@@ -14,4 +14,14 @@ export class UserRepository implements IUsersRepository {
       data,
     });
   }
+
+  async getBalance(id: number): Promise<Users> {
+    const user = await this._prisma.users.findFirst({
+      where: { id },
+    });
+    if (user) {
+      return Promise.resolve(user);
+    }
+    throw new Error("User not found");
+  }
 }

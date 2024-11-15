@@ -15,4 +15,12 @@ export class UserService {
     return data;
   }
 
+  async getBalanceUser(id: number) {
+    const data = await this._repository.getBalance(id);
+    if (!data.id) {
+      throw new Error("Not Get Balance User")
+    }
+    return data
+  }
+
 }
