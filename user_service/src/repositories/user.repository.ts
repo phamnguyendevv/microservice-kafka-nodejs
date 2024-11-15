@@ -15,14 +15,10 @@ export class UserRepository implements IUsersRepository {
     });
   }
 
-  async getBalance(
-    id: number
-  ): Promise<{ id: number , name: string; balance: number | null }> {
+  async getBalance(id: number): Promise<{ balance: number | null }> {
     const user = await this._prisma.users.findFirst({
       where: { id },
       select: {
-        id: true,
-        name: true,
         balance: true,
       },
     });
