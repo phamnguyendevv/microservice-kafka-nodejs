@@ -15,13 +15,22 @@ export class UserRepository implements IUsersRepository {
     });
   }
 
-  async getBalance(id: number): Promise<Users> {
+  async getBalance(
+    id: number
+  ): Promise<{ id: number , name: string; balance: number | null }> {
     const user = await this._prisma.users.findFirst({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        balance: true,
+      },
     });
+
     if (user) {
-      return Promise.resolve(user);
+      return user; // Return the selected fields directly
     }
+
     throw new Error("User not found");
   }
 }

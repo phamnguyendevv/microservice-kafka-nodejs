@@ -1,8 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import rootRouter from "./routes";
-
-
+import redisClient from "./redisClient";
 export const ExpressApp = async () => {
   const app = express();
   app.use(cors());

@@ -1,7 +1,7 @@
+import redis from "redis";
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../services/user.service"; // Giả sử bạn có CartService
 import { UserRepository } from "../repositories/user.repository";
-
 export const userService = new UserService(new UserRepository());
 
 export const regiserUser = async (
@@ -29,21 +29,26 @@ export const regiserUser = async (
   }
 };
 
-
 export const getBlanceUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const {id} = req.body
-    const cart = await userService.getBalanceUser(id);
-    res.status(201).json({
-      message: "User created successfully",
+    const { id } = req.params;
+    const numericId = Number(id);
+
+    const cart = await userService.getBalanceUser(numericId);
+    res.status(200).json({
+      message: "Get balance user successfully",
       data: cart,
-      status: 201,
+      status: 200,
     });
   } catch (error) {
-    console.error("Error during createCart:", error);
+    console.error("Error during get blance user:", error);
+    res.status(404).json({
+      error: "Can't get balance user",
+      status: 404,
+    });
   }
 };
