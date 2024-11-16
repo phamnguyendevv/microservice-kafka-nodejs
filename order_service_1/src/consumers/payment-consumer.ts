@@ -14,7 +14,7 @@ export const consumeTransactions = async (
        topic: "payment-transactions",
        fromBeginning: true,
      });
-
+     console.log(" paymen is here")
      // Run the consumer, processing each message
      await consumer.run({
        eachMessage: async ({ topic, partition, message }) => {
