@@ -7,19 +7,24 @@ import { createTopic } from "./kafkaAdmin";
 let producer: Producer;
 
 export const connectProducer = async <T>(): Promise<T> => {
-  await createTopic(["OrderEvents"]);
+  try {
+    await createTopic(["OrderEvents"]);
 
-  if (producer) {
-    console.log("Producer already connected");
+    if (producer) {
+      console.log("Producer already connected");
+      return producer as unknown as T;
+    }
+
+    producer = kafka.producer({
+      createPartitioner: Partitioners.DefaultPartitioner,
+    });
+    await producer.connect();
+    console.log("Producer connected");
     return producer as unknown as T;
+  } catch (error) {
+    console.error("Error connecting producer:", error);
+    throw error; // Hoặc xử lý lỗi tùy theo nhu cầu
   }
-
-  producer = kafka.producer({
-    createPartitioner: Partitioners.DefaultPartitioner,
-  });
-  await producer.connect();
-  console.log("Producer connected");
-  return producer as unknown as T;
 };
 
 export const disconnectProducer = async (): Promise<void> => {

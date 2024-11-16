@@ -49,6 +49,7 @@ export const getBlanceUser = async (
     // Kiểm tra Redis trước khi truy vấn DB
     const cacheKey = `user:${numericId}:balance`;
     console.log(cacheKey);
+    
     // **Modern Asynchronous Await/Async Approach:**
     const cachedBalance = await client.get(cacheKey);
     if (cachedBalance) {

@@ -6,19 +6,24 @@ import { MessageType, OrderEvent, TOPIC_TYPE } from "../../../types";
 
 let consumer: Consumer;
 
-const connectConsumer = async <T>(): Promise<T> => {
-  if (consumer) {
-    console.log("Consumer already connected");
+export const connectConsumer = async <T>(): Promise<T> => {
+  try {
+    if (consumer) {
+      console.log("Consumer already connected");
+      return consumer as unknown as T;
+    }
+
+    consumer = kafka.consumer({
+      groupId: process.env.GROUP_ID || "order-service-group",
+    });
+    await consumer.connect();
+     console.log("Consumer connected");
     return consumer as unknown as T;
+  } catch (error) {
+    console.error("Error connecting consumer:", error);
+    throw error; // Hoặc xử lý lỗi tùy theo nhu cầu
   }
-
-  consumer = kafka.consumer({
-    groupId: process.env.GROUP_ID || "order-service-group",
-  });
-  await consumer.connect();
-  return consumer as unknown as T;
 };
-
 
 const disconnectConsumer = async (): Promise<void> => {
   if (consumer) {
@@ -30,7 +35,7 @@ const subscribe = async (
   messageHandler: MessageHandler,
   topic: TOPIC_TYPE
 ): Promise<void> => {
-   const consumer = await connectConsumer<Consumer>();
+  const consumer = await connectConsumer<Consumer>();
   await consumer.subscribe({ topic: topic, fromBeginning: true });
 
   await consumer.run({
@@ -54,7 +59,7 @@ const subscribe = async (
   });
 };
 
-export const ConsumerBroker : ConsumerType = {
+export const ConsumerBroker: ConsumerType = {
   connectConsumer,
   disconnectConsumer,
   subscribe,
