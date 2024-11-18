@@ -1,7 +1,4 @@
-import { connectConsumer } from "../utils/broker/kafka/kafkaConsumer";
 import { MessageType, OrderEvent, TOPIC_TYPE } from "../types";
-import { MessageHandler } from "../utils/broker/broker.type";
-import { Consumer } from "kafkajs";
 import { ProducerBroker } from "../utils/broker/kafka/kafkaProducer";
 
 export const handlePaymentRetry = async (transaction: MessageType) => {
