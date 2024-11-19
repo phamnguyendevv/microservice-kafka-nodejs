@@ -12,6 +12,7 @@ export const createOrder = async (
   try {
     // create idempotent
     const idempotencyKey = String(req.headers["idempotency-key"]);
+
     const { amount, userId } = req.body;
 
     if (!idempotencyKey) {
@@ -28,11 +29,28 @@ export const createOrder = async (
       // Kiểm tra nếu idempotency key đã tồn tại
       const cachedResult = await clinet.get(idempotencyKey);
 
-      // if (cachedResult) {
-      //   // Trả về kết quả nếu idempotency key đã tồn tại
-      //   res.status(200).json(JSON.parse(cachedResult));
-      //   return;
-      // }
+      if (cachedResult) {
+        const obj = JSON.parse(cachedResult);
+        const statusIdempotencyKey = obj.status;
+        if (statusIdempotencyKey === "pending") {
+          res.status(202).json({
+            message: "Payment is being processed. Please check status later.",
+          });
+          return;
+        }
+        if (statusIdempotencyKey === "success") {
+          res.status(200).json({
+            message: "Payment has been processed successfully.",
+          });
+          return;
+        }
+        if (statusIdempotencyKey === "failed") {
+          res.status(400).json({
+            message: "Payment has been failed.",
+          });
+          return;
+        }
+      }
     } catch (error) {
       console.error("Get idempotency processing error:", error);
       res.status(500).json({ error: "Internal server error" });

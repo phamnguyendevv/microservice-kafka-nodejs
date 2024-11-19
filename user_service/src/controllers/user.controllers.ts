@@ -11,18 +11,18 @@ export const regiserUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    const { name, pass, balance } = req.body;
     const userData = {
-      name: "John Doe", // Đây phải là kiểu `string`
-      id: 1,
-      pass: "password123",
-      balance: 0,
+      name: name, // Đây phải là kiểu `string`
+      pass: pass,
+      balance: balance,
       create_at: new Date(),
       update_at: new Date(),
     };
-    const cart = await userService.registerUser(userData);
+    const user = await userService.registerUser(userData);
     res.status(201).json({
       message: "User created successfully",
-      data: cart,
+      data: user,
       status: 201,
     });
   } catch (error) {
@@ -49,7 +49,7 @@ export const getBlanceUser = async (
     // Kiểm tra Redis trước khi truy vấn DB
     const cacheKey = `user:${numericId}:balance`;
     console.log(cacheKey);
-    
+
     // **Modern Asynchronous Await/Async Approach:**
     const cachedBalance = await client.get(cacheKey);
     if (cachedBalance) {

@@ -5,55 +5,57 @@ export const handlePaymentRetry = async (transaction: MessageType) => {
   try {
     console.log("Processing retryyyyyyyy:", transaction);
     try {
+      const transactions = JSON.parse(transaction.data[0].value);
       const isRetrySuccessful = null;
 
       if (isRetrySuccessful) {
-        transaction.data.status = "success";
+        transactions.status = "success";
 
         // Publish success message to 'payment-success' topic
         await ProducerBroker.publish({
           topic: "payment-success",
           headers: { token: "token" },
           event: OrderEvent.CREATE_ORDER,
-          message: [{ value: JSON.stringify(transaction) }],
+          message: [{ value: JSON.stringify(transactions) }],
         });
 
-        console.log("Transaction succeeded:", transaction);
+        console.log("Transaction succeeded:", transactions);
       } else {
         throw new Error("Payment failed");
       }
     } catch (error) {
       console.log("-----------------------------------------");
-      console.log("Times retries", transaction.data.retries);
+      const transactions = JSON.parse(transaction.data[0].value);
+      console.log("Times retries", transactions.retries);
       console.error("Transaction failed: ", error);
 
-      if (transaction.data.retries < 3) {
-        transaction.data.retries += 1;
+      if (transactions.retries < 3) {
+        transactions.retries += 1;
 
         // Publish retry message to 'payment-retry' topic
         await ProducerBroker.publish({
           topic: "payment-retry",
           headers: { token: "token" },
           event: OrderEvent.CREATE_ORDER,
-          message: [{ value: JSON.stringify(transaction) }],
+          message: [{ value: JSON.stringify(transactions) }],
         });
 
         console.log(
-          `Retrying transaction (${transaction.data.retries}/3):`,
-          transaction
+          `Retrying transaction (${transactions.retries}/3):`,
+          transactions
         );
       } else {
-        transaction.data.status = "failed";
+        transactions.status = "failed";
 
         // Publish dead-letter message to 'payment-deadletter' topic
         await ProducerBroker.publish({
           topic: "payment-deadletter",
           headers: { token: "token" },
           event: OrderEvent.CREATE_ORDER,
-          message: [{ value: JSON.stringify(transaction) }],
+          message: [{ value: JSON.stringify(transactions) }],
         });
 
-        console.error("Transaction moved to deadletter:", transaction);
+        console.error("Transaction moved to deadletter:", transactions);
       }
     }
   } catch (error) {

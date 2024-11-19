@@ -52,6 +52,7 @@ export const startService = async () => {
           };
 
           console.log(`Received message from topic ${topic}:`, transaction);
+
           // Handle logic based on the topic
           switch (topic) {
             case "payment-transactions":
