@@ -16,12 +16,6 @@ export const ExpressApp = async () => {
   //consumer
   await startService();
 
-  // // 2nd step: subscribe to the topic or publish the message
-  // await ConsumerBroker.subscribe((message) => {
-  //   console.log("Consumer received the message");
-  //   console.log("Message received", message);
-  // }, "OrderEvents");
-
   app.use("/", rootRouter);
 
   app.use(errorMiddleware);

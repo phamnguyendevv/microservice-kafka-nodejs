@@ -14,6 +14,15 @@ export class UserRepository implements IUsersRepository {
       data,
     });
   }
+  async findUser(name: string): Promise<Users | null> {
+    if (!name) {
+      throw new Error("Name parameter is required.");
+    }
+
+    return this._prisma.users.findFirst({
+      where: { name },
+    });
+  }
 
   async getBalance(id: number): Promise<{ balance: number | null }> {
     const user = await this._prisma.users.findFirst({

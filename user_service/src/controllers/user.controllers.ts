@@ -30,6 +30,24 @@ export const regiserUser = async (
   }
 };
 
+export const loginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { name, pass } = req.body;
+    const user = await userService.findUser(name);
+    res.status(200).json({
+      message: "User login successfully",
+      data: user,
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error during login :", error);
+  }
+};
+
 export const getBlanceUser = async (
   req: Request,
   res: Response,

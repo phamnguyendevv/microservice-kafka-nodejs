@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { regiserUser, getBlanceUser } from "../controllers/user.controllers";
+import {
+  regiserUser,
+  loginUser,
+  getBlanceUser,
+} from "../controllers/user.controllers";
 
-const cartRoutes = Router();
+const userRoutes = Router();
 
-cartRoutes.route("/").post(regiserUser);
-cartRoutes.route("/:id/balance").get(getBlanceUser);
+userRoutes.route("/register").post(regiserUser);
+userRoutes.route("/login").post(loginUser);
 
-export default cartRoutes;
+userRoutes.route("/:id/balance").get(getBlanceUser);
+
+export default userRoutes;
