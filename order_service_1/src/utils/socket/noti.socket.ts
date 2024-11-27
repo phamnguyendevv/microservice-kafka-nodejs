@@ -4,7 +4,11 @@ import { Server } from "socket.io";
 const onlineUsers = new Map();
 
 const setupSocket = (server: any) => {
-  const io = new Server(server);
+  const io = new Server(server, {
+    cors: {
+      origin: "http://localhost:3000", // Đảm bảo rằng đây là domain của bạn
+    },
+  });
 
   io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
@@ -13,6 +17,17 @@ const setupSocket = (server: any) => {
     socket.on("add-user", (userId) => {
       onlineUsers.set(userId, socket.id);
       console.log(`${userId} is online with socket ID: ${socket.id}`);
+    });
+
+    socket.on("user:login", (data) => {
+      console.log("Người dùng đăng nhập:", data);
+      // Ví dụ: { userId: "12345", socketId: "abcde12345" }
+
+      // Lưu thông tin kết nối nếu cần
+      // users[data.userId] = socket.id;
+
+      // Có thể phản hồi lại client nếu cần
+      socket.emit("login:success", { message: "Đăng nhập thành công!" });
     });
 
     // Khi user gửi tin nhắn

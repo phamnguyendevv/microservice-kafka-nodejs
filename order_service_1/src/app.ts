@@ -13,14 +13,19 @@ export const ExpressApp = async () => {
   app.use(bodyParser.json());
   app.use(express.json());
   const server = createServer(app);
+  console.log("serveris up ", typeof server);
+  const io = setupSocket(server);
+
   //consumer
   await startService();
 
   app.use("/", rootRouter);
 
   app.use(errorMiddleware);
+  // Bắt đầu server
+  server.listen(4444, () => {
+    console.log("Server đang chạy tại http://localhost:4444");
+  });
 
-  const io = setupSocket(server);
-
-  return app;
+  return server;
 };
