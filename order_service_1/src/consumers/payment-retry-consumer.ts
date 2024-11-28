@@ -1,9 +1,12 @@
 import { MessageType, OrderEvent, TOPIC_TYPE } from "../types";
 import { ProducerBroker } from "../utils/broker/kafka/kafkaProducer";
+import { checkBalance } from "../utils/user/checkBalance";
 
 export const handlePaymentRetry = async (transaction: MessageType) => {
   try {
-    console.log("Processing retryyyyyyyy:", transaction);
+    console.log("Processing retry:", transaction);
+    const balanceUser = await checkBalance(transaction);
+
     try {
       const transactions = JSON.parse(transaction.data[0].value);
       const isRetrySuccessful = null;

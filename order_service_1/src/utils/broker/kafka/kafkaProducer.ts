@@ -45,7 +45,7 @@ export const publish = async (data: PublishType): Promise<boolean> => {
       },
     ],
   });
-  console.log("Publishing result", result);
+  console.log("Publishing result 1:", result);
   return result.length > 0;
 };
 

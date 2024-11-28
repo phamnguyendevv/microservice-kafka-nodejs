@@ -12,11 +12,49 @@ datasource db {
 
 
 
-model Users {
-  id        Int      @id @default(autoincrement())
-  name      String  
-  pass      String
-  balance   Int?
-  create_at DateTime @default(now())
-  update_at DateTime @updatedAt
+model User {
+  id              Int      @id @default(autoincrement())
+  role_id         Int
+  status_id       Int
+  email           String   @unique
+  full_name       String
+  password        String
+  avatar          String?
+  phone           String
+  sex             String
+  balance         Int
+  used_balance    Int?
+  total_deposit   Int?
+  referral_code   String?
+  referrer_id     String?
+  code_bank       String?
+  is_online       Boolean
+  qr_data         Json
+  date_create     DateTime @default(now())
+  date_update     DateTime @updatedAt
+
+  status          User_status @relation(fields: [status_id], references: [id])
+  role            User_role   @relation(fields: [role_id], references: [id])
+}
+
+
+model User_status {
+  id              Int      @id @default(autoincrement())
+  name            String
+  date_create     DateTime @default(now())
+  date_update     DateTime @updatedAt
+
+  // Mối quan hệ ngược
+  users           User[]
+}
+
+
+model User_role {
+  id              Int      @id @default(autoincrement())
+  name            String
+  date_create     DateTime @default(now())
+  date_update     DateTime @updatedAt
+
+  // Mối quan hệ ngược
+  users           User[]
 }

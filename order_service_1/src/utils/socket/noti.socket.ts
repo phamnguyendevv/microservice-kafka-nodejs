@@ -1,6 +1,6 @@
-import socketIO from "socket.io";
 import { Server } from "socket.io";
 
+let ioInstance: Server | null = null;
 const onlineUsers = new Map();
 
 const setupSocket = (server: any) => {
@@ -9,18 +9,13 @@ const setupSocket = (server: any) => {
       origin: "http://localhost:3000", // Đảm bảo rằng đây là domain của bạn
     },
   });
+  ioInstance = io; // Lưu lại instance
 
   io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
 
-    // Thêm user vào danh sách online
-    socket.on("add-user", (userId) => {
-      onlineUsers.set(userId, socket.id);
-      console.log(`${userId} is online with socket ID: ${socket.id}`);
-    });
-
     socket.on("user:login", (data) => {
-      console.log("Người dùng đăng nhập:", data);
+      console.log(data);
       // Ví dụ: { userId: "12345", socketId: "abcde12345" }
 
       // Lưu thông tin kết nối nếu cần
@@ -72,6 +67,13 @@ const setupSocket = (server: any) => {
   });
 
   return io;
+};
+
+export const getSocketInstance = () => {
+  if (!ioInstance) {
+    throw new Error("Socket.IO instance has not been initialized.");
+  }
+  return ioInstance;
 };
 
 export default setupSocket;

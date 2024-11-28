@@ -6,11 +6,9 @@ export const checkBalance = async (transaction: MessageType) => {
   const transactions = JSON.parse(transaction.data[0].value);
   const userId = transactions.userId; // Assuming user ID is pre.sent in the transaction data
   const userServiceUrl = CHECK_BALANCE_URL + userId + "/balance"; // Assuming user service URL
-  console.log("userServiceUrl", userServiceUrl);
 
   try {
     const response = await axios.get(userServiceUrl);
-    console.log("response", response);
 
     const userBalance = response.data.data.balance;
     const requiredAmount = transactions.amount;
@@ -18,6 +16,7 @@ export const checkBalance = async (transaction: MessageType) => {
     console.log("Required amount:", requiredAmount);
     if (userBalance >= requiredAmount) {
       return true; // Balance is sufficient
+      
     } else {
       return false; // Balance is insufficient
     }

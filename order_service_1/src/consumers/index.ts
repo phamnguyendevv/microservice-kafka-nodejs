@@ -24,10 +24,6 @@ export const startService = async () => {
       fromBeginning: true,
     });
 
-    console.log(
-      "Consumer subscribed to topics: payment-transactions, payment-success, payment-retry,payment-deadletter"
-    );
-
     // Run the consumer
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {

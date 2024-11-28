@@ -2,6 +2,10 @@
   "dependencies": {
     "@prisma/client": "^5.21.1",
     "class-transformer": "^0.5.1",
-    "kafkajs": "^2.2.4"
+    "kafkajs": "^2.2.4",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.13"
   }
 }

@@ -1,29 +1,18 @@
-
 import { MessageType, OrderEvent } from "../types";
+import { getSocketInstance } from "../utils/socket/noti.socket";
 
-
-
-// Function to handle individual payment transactions
 export const handlePaymentSuccess = async (transaction: MessageType) => {
-  // try {
+  try {
     console.log("Handling payment success:");
+    const io = getSocketInstance();
 
-  //   // Gửi thông báo đến user qua Socket.IO
-  //   const userId = transaction.data.userId;
-  //   const userSocketId = onlineUsers.get(userId);
-
-  //   if (userSocketId) {
-  //     io.to(userSocketId).emit("paymentSuccess", {
-  //       message: "Payment was successful!",
-  //       transactionId: transaction.data.id,
-  //       amount: transaction.data.amount,
-  //     });
-  //     console.log(`Notification sent to user: ${userId}`);
-  //   } else {
-  //     console.log(`User ${userId} is not online.`);
-  //   }
-  //   console.log("Payment succeeded:");
-  // } catch (error) {
-  //   console.log(error);
-  // }
+    // Emit sự kiện tới tất cả client
+    io.emit("paymentSuccess", {
+      message: "Payment successful!",
+      transaction,
+    });
+    console.log("Payment success event emitted to clients.");
+  } catch (error) {
+    console.error("Error handling payment success:", error);
+  }
 };

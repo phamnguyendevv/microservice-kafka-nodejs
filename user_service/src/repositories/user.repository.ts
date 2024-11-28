@@ -9,23 +9,75 @@ export class UserRepository implements IUsersRepository {
     this._prisma = new PrismaClient();
   }
 
-  async register(data: Users): Promise<Users> {
-    return this._prisma.users.create({
+  async register(data: any): Promise<any> {
+    return this._prisma.user.create({
       data,
     });
   }
-  async findUser(name: string): Promise<Users | null> {
-    if (!name) {
-      throw new Error("Name parameter is required.");
+  async findUser(email: string): Promise<any | null> {
+    if (!email) {
+      throw new Error("email parameter is required.");
     }
 
-    return this._prisma.users.findFirst({
-      where: { name },
+    return this._prisma.user.findFirst({
+      where: { email },
+    });
+  }
+
+  //=======================================================Status=========================================================
+  async getStatus(id: number): Promise<any> {
+    return this._prisma.user_status.findFirst({
+      where: { id },
+    });
+  }
+
+  async createStatus(data: any): Promise<any> {
+    return this._prisma.user_status.create({
+      data,
+    });
+  }
+
+  async updateStatus(id: number, data: any): Promise<any> {
+    return this._prisma.user_status.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteStatus(id: number): Promise<any> {
+    return this._prisma.user_status.delete({
+      where: { id },
+    });
+  }
+
+  //=======================================================Role=========================================================
+  async getRole(id: number): Promise<any> {
+    return this._prisma.user_role.findFirst({
+      where: { id },
+    });
+  }
+
+  async createRole(data: any): Promise<any> {
+    return this._prisma.user_role.create({
+      data,
+    });
+  }
+
+  async updateRole(id: number, data: any): Promise<any> {
+    return this._prisma.user_role.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteRole(id: number): Promise<any> {
+    return this._prisma.user_role.delete({
+      where: { id },
     });
   }
 
   async getBalance(id: number): Promise<{ balance: number | null }> {
-    const user = await this._prisma.users.findFirst({
+    const user = await this._prisma.user.findFirst({
       where: { id },
       select: {
         balance: true,

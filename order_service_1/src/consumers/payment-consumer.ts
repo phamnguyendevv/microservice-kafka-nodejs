@@ -1,8 +1,5 @@
-import { CHECK_BALANCE_URL } from "../config";
 import { MessageType, OrderEvent } from "../types";
-import { ConsumerBroker } from "../utils/broker/kafka/kafkaConsumer";
 import { ProducerBroker } from "../utils/broker/kafka/kafkaProducer";
-import { v4 as uuidv4 } from "uuid"; // For unique correlation IDs
 import { checkBalance } from "../utils/user/checkBalance";
 
 // Function to handle individual payment transactions
