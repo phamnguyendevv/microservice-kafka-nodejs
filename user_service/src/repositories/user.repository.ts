@@ -24,13 +24,25 @@ export class UserRepository implements IUsersRepository {
     });
   }
 
+  async findUserById(id: number): Promise<any> {
+    return this._prisma.user.findFirst({
+      where: { id },
+    });
+  }
+
+  async updateUser(id: number, data: any): Promise<any> {
+    return this._prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
   //=======================================================Status=========================================================
   async getStatus(id: number): Promise<any> {
     return this._prisma.user_status.findFirst({
       where: { id },
     });
   }
-
   async createStatus(data: any): Promise<any> {
     return this._prisma.user_status.create({
       data,

@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import rootRouter from "./routes";
+import errorMiddleware from "./middlewares/error.middlewares";
 
 export const ExpressApp = async () => {
   const app = express();
@@ -10,7 +11,7 @@ export const ExpressApp = async () => {
 
   app.use("/", rootRouter);
   
-
+app.use(errorMiddleware);
   
 
 

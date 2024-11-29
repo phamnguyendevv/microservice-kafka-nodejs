@@ -18,14 +18,28 @@ export class UserService {
     const data = await this._repository.findUser(input);
     return data;
   }
+  async findUserById(id: number) {
+    const data = await this._repository.findUserById(id);
+    if (!data) {
+      throw new Error("Not get User!");
+    }
+    return data;
+  }
 
+  async updateUser(id: number, data: any) {
+    const user = await this._repository.updateUser(id, data);
+    if (!user) {
+      throw new Error("Not Update User!");
+    }
+    return user;
+  }
 
   async getStatusUser(id: number) {
     const data = await this._repository.getStatus(id);
-    if (!data) {
-      throw new Error("Not Get Status User!");
+    if (data) {
+       return data;
     }
-    return data;
+   
   }
 
   async createStatusUser(data: any) {
@@ -49,8 +63,7 @@ export class UserService {
     if (!status) {
       throw new Error("Not Delete Status User!");
     }
-    return status
-
+    return status;
   }
 
   async getRoleUser(id: number) {
@@ -84,8 +97,6 @@ export class UserService {
     }
     return role;
   }
-
-
 
   async getBalanceUser(id: number) {
     const data = await this._repository.getBalance(id);

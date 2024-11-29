@@ -3,6 +3,8 @@ import { Users } from "../models/user.model";
 export interface IUsersRepository {
   register(data: Users): Promise<Users>;
   findUser(email: string): Promise<any>;
+  findUserById(id: number): Promise<any>;
+  updateUser(id: number, data: any): Promise<any>;
   getBalance(id: number): Promise<{ balance: number | null }>;
 
   //=======================================================Status=========================================================
