@@ -207,11 +207,13 @@ export const changePassword = asyncHandler(
 );
 
 export const getUser = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const { id } = req.params;
-      const numericId = Number(id);
-      const user = await userService.findUserById(numericId);
+      const user = req.user;
       const { password, ...usercustom } = user;
       res.status(200).json({
         message: "Get user successfully",
@@ -226,16 +228,15 @@ export const getUser = asyncHandler(
 );
 
 export const updateUser = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      const { id } = req.params;
-      const numericId = Number(id);
+      const user = req.user;
       const { status_id, role_id, avatar, full_name, phone, sex, name } =
         req.body;
-      const user = await userService.findUserById(numericId);
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
       const data: any = {};
 
       if (status_id) data.status_id = status_id;
@@ -247,10 +248,10 @@ export const updateUser = asyncHandler(
       if (name) data.name = name;
       // Chỉ cập nhật nếu có dữ liệu cần update
       if (Object.keys(data).length > 0) {
-        const result = await userService.updateUser(numericId, data);
+        const result = await userService.updateUser(user.id, data);
 
         const { password, referrer_id, ...usercustom } = result;
-        res.status(200).json({  
+        res.status(200).json({
           message: "Update user successful",
           data: usercustom,
           status: 200,

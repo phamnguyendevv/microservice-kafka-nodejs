@@ -23,8 +23,8 @@ import {
   valiRegister,
   valiLogin,
   valiForgot,
-} from "../middlewares/user.auth.middlewares";
-import { UserRole } from "../constants/statusRole";
+} from "../middlewares/user.validator.middlewares";
+import { isAuthenticatedUser } from "../middlewares/user.auth.middlewates";
 
 const userRoutes = Router();
 
@@ -33,14 +33,11 @@ userRoutes.route("/login").post(validate(valiLogin), loginUser);
 userRoutes.route("/token").post(refreshToken);
 userRoutes.route("/password/forgot").post(validate(valiForgot), forgotPassword);
 userRoutes.route("/password/reset").post(resetPassword);
-userRoutes.route("/password/update").post(changePassword);
-userRoutes.route("/me/:id").get(getUser);
-userRoutes.route("/me/:id/update").get(updateUser);
-
+userRoutes.route("/password/update").post(isAuthenticatedUser,changePassword);
+userRoutes.route("/me").get(isAuthenticatedUser,getUser);
+userRoutes.route("/me/update").get(isAuthenticatedUser,updateUser);
 
 userRoutes.route("/:id/balance").get(getBlanceUser);
-
-
 
 userRoutes.route("/admin/status").post(createUserStatus).put(updateUserStatus);
 userRoutes.route("/admin/status/:id").get(getUserStatus);
