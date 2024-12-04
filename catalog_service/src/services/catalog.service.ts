@@ -37,4 +37,30 @@ export class CatalogService {
     // delete record from Elastic search
     return response;
   }
+
+  //=====================================category=======================
+
+  async createCategory(input: any) {
+    const data = await this._repository.createCategory(input);
+    if (!data.id) {
+      throw new Error("unable to create category");
+    }
+    return data;
+  }
+
+  getCategories() {
+    const data = this._repository.getCategories();
+    return data;
+  }
+
+  updateCatagory(input: any) {
+    // update category
+    const data = this._repository.updateCategory(input);
+    return data;
+  }
+  deleteCategory(id : number) {
+    const data = this._repository.deleteCategory(id);
+    return data
+  }
+  
 }

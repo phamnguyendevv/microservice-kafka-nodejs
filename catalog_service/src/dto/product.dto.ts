@@ -5,15 +5,24 @@ export class CreateProductRequest {
   @IsNotEmpty()
   name: string;
 
+  
+  category_id: number;
+
   @IsString()
+  slug: string;
+  @IsString()
+    
   description: string;
 
-  @IsNumber()
-  @Min(1)
   price: number;
-
-  @IsNumber()
-  stock: number;
+  location: number;
+  inventory: number;
+  number_sold: number;
+  image: string;
+  is_popular: boolean;
+  code_discount: string;
+  per_order: number;
+;
 }
 
 export class UpdateProductRequest {

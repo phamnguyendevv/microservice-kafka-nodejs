@@ -8,6 +8,8 @@ const router = Router();
 
 export const catalogService = new CatalogService(new CatalogRepository());
 
+//--------------------------------------------------------product------------------------------------------------------------
+
 router.post(
   "/products",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -58,13 +60,12 @@ router.get(
     const id = parseInt(req.params.id) || 0;
     try {
       const data = await catalogService.getProduct(id);
-       res.status(200).json(data);
+      res.status(200).json(data);
     } catch (error) {
-       next(error);
+      next(error);
     }
   }
 );
-
 
 router.get(
   "/products",
@@ -72,9 +73,76 @@ router.get(
     const limit = Number(req.query["limit"]);
     const offset = Number(req.query["offset"]);
     try {
-      
       const data = await catalogService.getProducts(limit, offset);
       res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+//--------------------------------------------------------category------------------------------------------------------------
+
+router.post(
+  "/categories",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const input = req.body;
+      const cate = await catalogService.createCategory(input);
+      res.status(201).json({
+        message: "Category created successfully",
+        data: cate,
+        status: 201,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/categories",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await catalogService.getCategories();
+
+      res.status(200).json({
+        message: "Category fetched successfully",
+        data: data,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.put(
+  "/categories",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const input = req.body;
+      const cate = await catalogService.updateCatagory(input);
+      res.status(201).json({
+        message: "Category created successfully",
+        data: cate,
+        status: 201,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  "/categories/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = parseInt(req.params.id) || 0;
+    try {
+      await catalogService.deleteCategory(id);
+      res.status(200).json({
+        message: "Category deleted successfully",
+        status: 200,
+      });
     } catch (error) {
       next(error);
     }

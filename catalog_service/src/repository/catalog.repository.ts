@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ICatalogRepository } from "../interface/catalogRepository.interface";
-import { Product } from "../models/product.model";
+import { Product, Category } from "../models/product.model";
 import { NotFoundError } from "../utils";
 
 export class CatalogRepository implements ICatalogRepository {
@@ -10,32 +10,32 @@ export class CatalogRepository implements ICatalogRepository {
     this._prisma = new PrismaClient();
   }
 
-  async create(data: Product): Promise<Product> {
+  async create(data: any): Promise<Product> {
     return this._prisma.product.create({
       data,
     });
-    }
-    
+  }
+
   async update(data: Product): Promise<Product> {
     return this._prisma.product.update({
       where: { id: data.id },
       data,
     });
-    }
-    
+  }
+
   async delete(id: any) {
     return this._prisma.product.delete({
       where: { id },
     });
-    }
-    
+  }
+
   async find(limit: number, offset: number): Promise<Product[]> {
     return this._prisma.product.findMany({
       take: limit,
       skip: offset,
     });
-    }
-    
+  }
+
   async findOne(id: number): Promise<Product> {
     const product = await this._prisma.product.findFirst({
       where: { id },
@@ -44,5 +44,28 @@ export class CatalogRepository implements ICatalogRepository {
       return Promise.resolve(product);
     }
     throw new NotFoundError("product not found");
+  }
+
+  async createCategory(data: any): Promise<Category> {
+    return this._prisma.categories.create({
+      data,
+    });
+  }
+
+  async getCategories(): Promise<Category[]> {
+    return this._prisma.categories.findMany();
+  }
+
+  async updateCategory(data: Category): Promise<Category> {
+    return this._prisma.categories.update({
+      where: { id: data.id },
+      data,
+    });
+  }
+
+  async deleteCategory(id: number) {
+    return this._prisma.categories.delete({
+      where: { id },
+    });
   }
 }
