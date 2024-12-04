@@ -14,15 +14,27 @@ router.post(
   "/products",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { errors, input } = await RequestValidator(
-        CreateProductRequest,
-        req.body
-      );
+      const { user_id, category_id, name, slug, price, image, description } =
+        req.body;
 
-      if (errors) {
-        res.status(400).json(errors);
-        return;
-      }
+      const input = {
+        user_id,
+        status_id: 3,
+        category_id,
+        name,
+        slug,
+        price,
+        location: 84,
+        inventory: 0,
+        image,
+        number_sold: 0,
+        description,
+        is_popular: true,
+        code_discount: null,
+        per_order: false,
+        date_create: new Date(),
+      };
+
       const data = await catalogService.createProduct(input);
       res.status(201).json(data);
     } catch (error) {
